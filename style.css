@@ -1,19 +1,17 @@
-*, body, button {
+*,
+body,
+button {
   font-family: 'Roboto', sans-serif;
   font-weight: 400;
 }
 
 body {
-  background: #FAFAFA;
+  background: #fafafa;
   display: flex;
   justify-content: center;
 }
 
 /* GERAL */
-.hidden {
-  display: none !important;
-}
-
 header {
   width: 100%;
   height: 69px;
@@ -22,8 +20,8 @@ header {
   align-items: center;
   justify-content: center;
 
-  color: #FFF;
-  background: #EC362D;
+  color: #fff;
+  background: #ec362d;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
   position: fixed;
@@ -50,7 +48,8 @@ h1 {
   justify-content: center;
 }
 
-.c-main h2, .c-main legend {
+.c-main h2,
+.c-main legend {
   font-size: 20px;
   line-height: 23px;
   font-weight: 700;
@@ -75,7 +74,7 @@ h1 {
   flex-direction: column;
   gap: 9px;
 
-  background: #FFF;
+  background: #fff;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
 }
 
@@ -85,7 +84,7 @@ h1 {
   padding-left: 14px;
 
   border-radius: 5px;
-  border: 1px solid #D1D1D1;
+  border: 1px solid #d1d1d1;
 
   font-size: 19px;
   line-height: 22px;
@@ -95,7 +94,7 @@ h1 {
   width: 100%;
   margin-top: 29px;
   padding: 0 25px;
-  
+
   display: flex;
   justify-content: center;
 }
@@ -109,8 +108,8 @@ h1 {
   text-align: center;
 
   border-radius: 15px;
-  color: #FFF5F4;
-  background: #EC362D;
+  color: #fff5f4;
+  background: #ec362d;
 }
 
 .com-icone {
@@ -124,7 +123,7 @@ h1 {
   margin-top: 24px;
   padding: 27px 17px;
 
-  background: #FFF;
+  background: #fff;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
 }
 
@@ -132,7 +131,8 @@ h1 {
   margin-top: 28px;
 }
 
-.c-main__content input + input, .c-main__content input + textarea {
+.c-main__content input + input,
+.c-main__content input + textarea {
   margin-top: 14px;
 }
 
@@ -151,7 +151,7 @@ h1 {
   padding: 14px;
 
   border-radius: 5px;
-  border: 1px solid #D1D1D1;
+  border: 1px solid #d1d1d1;
 
   font-size: 19px;
   line-height: 22px;
@@ -187,7 +187,7 @@ h1 {
   font-size: 19px;
   line-height: 22px;
 
-  color: #FFF;
+  color: #fff;
 
   position: absolute;
   left: 17px;
@@ -199,9 +199,14 @@ h1 {
   width: 100%;
   height: 100%;
   border-radius: 5px;
-  
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0.5) 65.62%, rgba(0, 0, 0, 0.8) 100%);
-  
+
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(0, 0, 0, 0.5) 65.62%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+
   position: absolute;
   top: 0;
   z-index: 1;
@@ -228,12 +233,12 @@ h1 {
 
 .c-sucesso__button-acessar {
   border-radius: 15px;
-  color: #FFF5F4;
-  background: #EC362D;
+  color: #fff5f4;
+  background: #ec362d;
 }
 
 .c-sucesso__button-voltar {
-  color:#818181;
+  color: #818181;
 }
 
 .c-main button:hover {
@@ -242,7 +247,7 @@ h1 {
 
 ::placeholder {
   font-style: italic;
-  color: #BABABA;
+  color: #bababa;
 }
 
 /* TELA LISTA DE QUIZZES */
@@ -255,8 +260,8 @@ h1 {
 }
 
 .criar-quizz button {
-  background: #FAFAFA;
-  border: 1px dashed #EC362D;
+  background: #fafafa;
+  border: 1px dashed #ec362d;
   border-radius: 50px;
   height: 40px;
   width: 151px;
@@ -264,128 +269,152 @@ h1 {
   font-weight: 400;
   font-size: 21px;
   line-height: 25px;
-  color: #EC362D;
+  color: #ec362d;
 }
 .criar-quizz p {
   font-style: normal;
   font-weight: 400;
   font-size: 20px;
   line-height: 23px;
-  color: #B9B9B9;
+  color: #b9b9b9;
   text-align: center;
 }
 .criar-quizz {
   margin-bottom: 77px;
-  background-color: #EC362D;
+  background-color: #ec362d;
   width: 100%;
   height: 181px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  background: #FAFAFA;
-  border: 1px dashed #D5D5D5;
+  background: #fafafa;
+  border: 1px dashed #d5d5d5;
   border-radius: 5px;
 }
 
 .titulo-opcoes-quizz,
 .titulo-adicionar-quizz {
-    width: 100%;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 23px;
-    text-align: flex-start;
-    margin-bottom: 12px;
+  width: 100%;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 23px;
+  text-align: flex-start;
+  margin-bottom: 12px;
 }
 
 .opcoes-quizz,
 .quizzes-adicionados {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 }
 
 .quizzes-adicionados {
-    width: 1066px;
+  width: 1066px;
 }
 
 .quizz1,
 .quizz2,
 .quizzadd1,
 .quizzadd2 {
-    width: 340px;
-    height: 181px;
-    background-color: red;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0.5) 64.58%, #0000003b 100%), url(./assets/simpsons.png);
-    background-size: auto;
-    border-radius: 5px;
-    display: flex;
-    align-items: flex-end;
-    margin-bottom: 12px;
-    margin-right: 15px;
+  width: 340px;
+  height: 181px;
+  background-color: red;
+  background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(0, 0, 0, 0.5) 64.58%,
+      #0000003b 100%
+    ),
+    url(./assets/simpsons.png);
+  background-size: auto;
+  border-radius: 5px;
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 12px;
+  margin-right: 15px;
 }
 
 .quizz2 {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0.5) 64.58%, #0000003b 100%), url(./assets/preguica.png);
-}  
+  background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(0, 0, 0, 0.5) 64.58%,
+      #0000003b 100%
+    ),
+    url(./assets/preguica.png);
+}
 
 .quizzadd1 {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0.5) 64.58%, #0000003b 100%), url(./assets/harrypotter.png);
+  background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(0, 0, 0, 0.5) 64.58%,
+      #0000003b 100%
+    ),
+    url(./assets/harrypotter.png);
 }
 
 .quizzadd2 {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0.5) 64.58%, #0000003b 100%), url(./assets/deferiascomex.png);
+  background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(0, 0, 0, 0.5) 64.58%,
+      #0000003b 100%
+    ),
+    url(./assets/deferiascomex.png);
 }
 
 .quizz1 p,
 .quizz2 p,
 .quizzadd1 p,
 .quizzadd2 p {
-    font-style: normal;
-    font-weight: 400;
-    font-size: 19px;
-    line-height: 22px;
-    color: #FFFFFF;
-    margin-left: 18px;
-    margin-bottom: 7px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 22px;
+  color: #ffffff;
+  margin-left: 18px;
+  margin-bottom: 7px;
 }
 
 .quizz2 p,
 .quizzadd1 p,
 .quizzadd2 p {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .titulo-adicionar-quizz ion-icon {
-    color: #ffffff;
-    background-color: #EC362D;
-    border-radius: 500px;
-    font-size: 25px;
-    margin-left: 17px;
+  color: #ffffff;
+  background-color: #ec362d;
+  border-radius: 500px;
+  font-size: 25px;
+  margin-left: 17px;
 }
 
 .titulo-adicionar-quizz {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .esconder {
-    display: none;
+  display: none !important;
 }
 
-@media (min-width: 1100px){
+@media (min-width: 1100px) {
   /* CRIAR QUIZZ - FORMULÁRIO */
   .c-main {
     padding-top: 140px;
     padding-bottom: 30px;
   }
-  
+
   .c-main legend {
     font-size: 23px;
     line-height: 27px;
   }
-  
+
   .c-main__formulario {
     max-width: 600px;
   }
@@ -393,49 +422,49 @@ h1 {
   .c-main input {
     padding-left: 23px;
   }
-  
+
   .c-main__formulario-button {
     margin-top: 85px;
   }
-  
+
   .c-main__button-prosseguir {
     max-width: 369px;
-  
+
     font-size: 21px;
     line-height: 25px;
   }
-  
+
   /* CRIAR QUIZZ - ETAPA 2 */
   .c-main__content {
     margin-top: 36px;
   }
-   
+
   /* CRIAR QUIZZ - ETAPA 3 */
   .c-main textarea {
     height: 48px;
     padding: 12px 23px;
   }
-  
+
   /* CRIAR QUIZZ - SUCESSO */
   .c-main__sucesso {
     max-width: 500px;
   }
-  
+
   .c-main__sucesso h2 {
     margin-bottom: 46px;
   }
-  
+
   .c-sucesso__container-img {
     margin-bottom: 45px;
   }
-  
+
   .c-sucesso__container-img p {
     font-size: 23px;
     line-height: 27px;
-  
+
     left: 23px;
   }
-  
+
   .c-sucesso__container-button button {
     font-size: 21px;
     line-height: 25px;
@@ -447,23 +476,23 @@ h1 {
   .titulo-adicionar-quizz .opcoes-quizz,
   .container-conteudos,
   .quizzes-adicionados {
-      width: 80%;
+    width: 80%;
   }
 
   .container-conteudos,
   .opcoes-quizz,
   .quizzes-adicionados {
-      width: 340px;
-      justify-content: center;
-      flex-direction: column;
+    width: 340px;
+    justify-content: center;
+    flex-direction: column;
   }
 
   .titulo-opcoes-quizz,
   .titulo-adicionar-quizz {
-      width: 340px;
+    width: 340px;
   }
 
   .titulo-adicionar-quizz {
-      justify-content: space-between;
+    justify-content: space-between;
   }
 }

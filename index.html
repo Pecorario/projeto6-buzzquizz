@@ -17,13 +17,13 @@
     />
   </head>
   <body>
-    <header>
-        <h1>BuzzQuizz</h1>
-    </header>
+    <!-- <header>
+      <h1>BuzzQuizz</h1>
+    </header> -->
 
-    <main class="c-main hidden">
-      <form action="" class="c-main__formulario hidden">
-        <fieldset class="c-main__informacoes-gerais hidden">
+    <!-- <main class="c-main esconder">
+      <form action="" class="c-main__formulario">
+        <fieldset class="c-main__informacoes-gerais">
           <legend>Comece pelo começo</legend>
 
           <div class="c-informacoes-gerais__content">
@@ -60,7 +60,7 @@
           </div>
         </fieldset>
 
-        <fieldset class="c-main__criar-perguntas hidden">
+        <fieldset class="c-main__criar-perguntas esconder">
           <legend>Crie suas perguntas</legend>
 
           <div class="c-main__content">
@@ -156,7 +156,7 @@
           </div>
         </fieldset>
 
-        <fieldset class="c-main__niveis hidden">
+        <fieldset class="c-main__niveis esconder">
           <legend>Agora, decida os níveis!</legend>
 
           <div class="c-main__content">
@@ -200,7 +200,7 @@
         </fieldset>
       </form>
 
-      <div class="c-main__sucesso hidden">
+      <div class="c-main__sucesso esconder">
         <h2>Seu quizz está pronto!</h2>
 
         <div class="c-sucesso__container-img">
@@ -222,12 +222,12 @@
     </main>
 
     <div class="container-conteudos">
-      <div class="titulo-adicionar-quizz ">
+      <div class="titulo-adicionar-quizz">
           <p>Seus Quizzes</p>
-          <ion-icon name="add-outline">
+          <ion-icon name="add-outline" onclick="criarQuizz()">
       </div>
 
-      <div class="quizzes-adicionados ">
+      <div class="quizzes-adicionados">
           <div class="quizzadd1">
               <p>O quão Potterhead é você?</p>
           </div>
@@ -235,9 +235,9 @@
               <p>É ex-BBB ou ex-De férias com o Ex?</p>
           </div>
       </div>
-      <div class="criar-quizz esconder ">
+      <div class="criar-quizz esconder">
           <p>Você não criou nenhum </br>quizz ainda :(</p>
-          <button>Criar Quizz</button>
+          <button onclick="criarQuizz()">Criar Quizz</button>
       </div>
       <div class="titulo-opcoes-quizz">Todos os Quizzes</div>
       <div class="opcoes-quizz">
@@ -260,10 +260,16 @@
               <p>Acerte os personagens corretos </br>dos Simpsons e prove seu amor!</p>
           </div>
       </div>
-    </div><!--FIM DO CONTAINER-CONTEÚDOS-->
-    
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-  <script src="script.js"></script>
-</body>
+    </div> -->
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+    <script src="script.js"></script>
+  </body>
 </html>
