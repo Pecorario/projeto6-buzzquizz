@@ -163,3 +163,30 @@ h1 {
 .esconder {
     display: none;
 }
+
+@media (max-width: 1100px) {
+
+  .titulo-opcoes-quizz,
+  .titulo-adicionar-quizz .opcoes-quizz,
+  .container-conteudos,
+  .quizzes-adicionados {
+      width: 80%;
+  }
+
+  .container-conteudos,
+  .opcoes-quizz,
+  .quizzes-adicionados {
+      width: 340px;
+      justify-content: center;
+      flex-direction: column;
+  }
+
+  .titulo-opcoes-quizz,
+  .titulo-adicionar-quizz {
+      width: 340px;
+  }
+
+  .titulo-adicionar-quizz {
+      justify-content: space-between;
+  }
+}
