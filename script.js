@@ -13,7 +13,7 @@ const carregarPaginaLista = () => {
       </div>
 
       <div class="quizzes-adicionados">
-          <div class="quizzadd1">
+          <div class="quizzadd1" onclick="carregarPerguntas()">
               <p>O quão Potterhead é você?</p>
           </div>
           <div class="quizzadd2">

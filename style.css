@@ -370,7 +370,8 @@ h1 {
 .quizz1 p,
 .quizz2 p,
 .quizzadd1 p,
-.quizzadd2 p {
+.quizzadd2 p,
+.background-quizz p {
   font-style: normal;
   font-weight: 400;
   font-size: 19px;
@@ -495,4 +496,28 @@ h1 {
   .titulo-adicionar-quizz {
     justify-content: space-between;
   }
+}
+
+/* DISPLAY PERGUNTAS DO QUIZZ */
+.container-conteudos.novo-container {
+  margin-top: 69px;
+}
+
+.background-quizz {
+  width: 100vw;
+  max-height: 227px;
+  min-height: 142px;
+  background-image: url(./assets/harrypotter.png);
+  background-size: cover;
+  background-position: center;
+}
+
+.titulo-quizz {
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  max-height: 227px;
+  min-height: 142px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
