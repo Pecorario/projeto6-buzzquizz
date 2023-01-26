@@ -140,7 +140,7 @@ h1 {
   margin-top: 12px;
 }
 
-.c-main__line:not(h2 + div) {
+.c-main__line + .c-main__line {
   margin-top: 32px;
 }
 
@@ -241,7 +241,9 @@ h1 {
   color: #818181;
 }
 
-.c-main button:hover {
+.c-main button:hover,
+.c-main__content--hover:hover {
+  cursor: pointer;
   filter: brightness(0.9);
 }
 
