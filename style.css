@@ -507,12 +507,22 @@ h1 {
 }
 
 .background-quizz {
+  position: relative;
   width: 100vw;
-  max-height: 227px;
-  min-height: 142px;
-  background-image: url(./assets/harrypotter.png);
-  background-size: cover;
-  background-position: center;
+}
+
+.background-image {
+  position: absolute;
+  width: 100vw;
+  height: 142px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.background-image > img {
+  width: 100vw;
+  height: auto;
 }
 
 .titulo-quizz {
@@ -523,4 +533,5 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: absolute;
 }
