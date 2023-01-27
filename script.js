@@ -3,7 +3,15 @@ let quantidadePerguntas = 0;
 let quantidadeNiveis = 0;
 let novoQuizz;
 
-const baseURL = 'https://mock-api.driven.com.br/api/v4/buzzquizz';
+const listaQuizzes = [];
+
+const baseURL = 'https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes';
+
+const carregarQuizzes = async () => {
+  const response = await axios.get(baseURL);
+
+  listaQuizzes.push(...response.data);
+};
 
 const esconderBlocos = itemIdx => {
   const blocos = document.querySelectorAll('.c-main__content');
@@ -224,8 +232,10 @@ const carregarTelaSucesso = (tituloQuizz, imagemURL, id) => {
   `;
 };
 
-const carregarPaginaLista = () => {
+const carregarPaginaLista = async () => {
   const body = document.querySelector('body');
+
+  await carregarQuizzes();
 
   body.innerHTML = `
     <header>
@@ -233,46 +243,54 @@ const carregarPaginaLista = () => {
     </header>
 
     <div class="container-conteudos">
-      <div class="titulo-adicionar-quizz">
+      <div class="titulo-adicionar-quizz esconder">
           <p>Seus Quizzes</p>
           <ion-icon name="add-outline" onclick="carregarPaginaQuizz()">
       </div>
 
-      <div class="quizzes-adicionados">
-          <div class="quizzadd1" onclick="carregarPerguntas()">
-              <p>O quão Potterhead é você?</p>
-          </div>
-          <div class="quizzadd2">
-              <p>É ex-BBB ou ex-De férias com o Ex?</p>
-          </div>
+      <div class="quizzes-adicionados esconder">
+        <div class="container-img">
+          <div class="background-img"></div>
+          <img
+            src="assets/simpsons.png"
+            alt=""
+          />
+          <p>O quão Potterhead é você?</p>
+        </div>
+        <div class="container-img">
+          <div class="background-img"></div>
+          <img
+            src="assets/preguica.png"
+            alt=""
+          />
+          <p>É ex-BBB ou ex-De férias com o Ex?</p>
+        </div>
       </div>
-      <div class="criar-quizz esconder">
+
+      <div class="criar-quizz">
           <p>Você não criou nenhum </br>quizz ainda :(</p>
           <button onclick="carregarPaginaQuizz()">Criar Quizz</button>
       </div>
       <div class="titulo-opcoes-quizz">Todos os Quizzes</div>
       <div class="opcoes-quizz">
-          <div class="quizz1">
-              <p>Acerte os personagens corretos </br>dos Simpsons e prove seu amor!</p>
-          </div>
-          <div class="quizz2">
-              <p>O quanto você é de boas?</p>
-          </div>
-          <div class="quizz1">
-              <p>Acerte os personagens corretos </br>dos Simpsons e prove seu amor!</p>
-          </div>
-          <div class="quizz1">
-              <p>Acerte os personagens corretos </br>dos Simpsons e prove seu amor!</p>
-          </div>
-          <div class="quizz2">
-              <p>O quanto você é de boas?</p>
-          </div>
-          <div class="quizz1">
-              <p>Acerte os personagens corretos </br>dos Simpsons e prove seu amor!</p>
-          </div>
       </div>
     </div>
   `;
+
+  const lista = document.querySelector('.opcoes-quizz');
+
+  listaQuizzes.map(item => {
+    return (lista.innerHTML += `
+      <div class="container-img" onclick="carregarRespostas(${item.id})">
+        <div class="background-img"></div>
+        <img
+          src=${item.image}
+          alt=""
+        />
+        <p>${item.title}</p>
+    </div>
+    `);
+  });
 };
 
 const carregarPaginaQuizz = () => {
@@ -333,7 +351,7 @@ const carregarPaginaQuizz = () => {
 
 const enviarQuizz = async () => {
   try {
-    const response = await axios.post(`${baseURL}/quizzes`, novoQuizz);
+    const response = await axios.post(`${baseURL}`, novoQuizz);
 
     const titulo = response.data.title;
     const imagemURL = response.data.image;
