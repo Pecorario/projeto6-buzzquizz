@@ -3,6 +3,8 @@ let quantidadePerguntas = 0;
 let quantidadeNiveis = 0;
 let novoQuizz;
 
+const baseURL = 'https://mock-api.driven.com.br/api/v4/buzzquizz';
+
 const esconderBlocos = itemIdx => {
   const blocos = document.querySelectorAll('.c-main__content');
 
@@ -42,8 +44,6 @@ const esconderBlocos = itemIdx => {
 
 const carregarEtapaDois = () => {
   const formulario = document.querySelector('.c-main__formulario');
-
-  console.log('chega aqui? ');
 
   formulario.innerHTML = `
     <fieldset class="c-main__criar-perguntas">
@@ -198,7 +198,7 @@ const carregarEtapaTres = () => {
   `;
 };
 
-const carregarTelaSucesso = () => {
+const carregarTelaSucesso = (tituloQuizz, imagemURL, id) => {
   const main = document.querySelector('.c-main');
 
   main.innerHTML = `
@@ -208,10 +208,10 @@ const carregarTelaSucesso = () => {
       <div class="c-sucesso__container-img">
         <div class="c-sucesso__background"></div>
         <img
-          src="https://recreio.uol.com.br/media/_versions/harry_potter/hogwarts_capa_IoGEBAk_widelg.jpg"
+          src=${imagemURL}
           alt=""
         />
-        <p>O quão Potterhead é você?</p>
+        <p>${tituloQuizz}</p>
       </div>
 
       <div class="c-sucesso__container-button">
@@ -222,170 +222,6 @@ const carregarTelaSucesso = () => {
       </div>
     </div>
   `;
-};
-
-const enviarQuizz = () => {
-  carregarTelaSucesso();
-};
-
-const validarURL = url => {
-  const expression =
-    /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
-
-  const regex = new RegExp(expression);
-
-  if (url.match(regex)) {
-    return true;
-  }
-
-  return false;
-};
-
-const validarEtapaUm = () => {
-  const inputsInformacoesGerais = document.querySelectorAll('input');
-
-  const titulo = inputsInformacoesGerais[0].value;
-  const url = inputsInformacoesGerais[1].value;
-  const valorQuantidadePerguntas = inputsInformacoesGerais[2].value;
-  const valorQuantidadeNiveis = inputsInformacoesGerais[3].value;
-
-  const tituloEhValido = titulo.length >= 20 && titulo.length <= 65;
-  const urlEhValida = validarURL(url);
-  const quantidadePerguntasEhValida = valorQuantidadePerguntas >= 3;
-  const quantidadeNiveisEhValida = valorQuantidadeNiveis >= 2;
-
-  if (
-    !tituloEhValido ||
-    !urlEhValida ||
-    !quantidadePerguntasEhValida ||
-    !quantidadeNiveisEhValida
-  ) {
-    return alert('Preencha os dados corretamente');
-  }
-
-  novoQuizz = {
-    title: titulo,
-    image: url
-  };
-
-  quantidadePerguntas = valorQuantidadePerguntas;
-  quantidadeNiveis = valorQuantidadeNiveis;
-
-  carregarEtapaDois();
-  etapa++;
-};
-
-const validarEtapaDois = () => {
-  const blocosPergunta = document.querySelectorAll('.c-main__content');
-  let formularioInvalido = false;
-  const perguntasArr = [];
-
-  blocosPergunta.forEach((item, idx) => {
-    const respostas = [];
-    const perguntas = item.querySelectorAll('input');
-
-    const RegExp = /^#[0-9A-F]{6}$/i;
-    const corEhValida = RegExp.test(perguntas[1].value);
-
-    const tituloEhValido = perguntas[0].value.length >= 20;
-
-    if (!tituloEhValido || !corEhValida) {
-      return (formularioInvalido = true);
-    }
-
-    let obj = {
-      title: perguntas[0].value,
-      color: perguntas[1].value
-    };
-
-    for (let i = 2; i < perguntas.length; i += 2) {
-      const ehRespostaCorreta = i === 2;
-
-      if (perguntas[i].value.length > 0) {
-        let resposta = {
-          text: perguntas[i].value,
-          image: perguntas[i + 1].value,
-          isCorrectAnswer: ehRespostaCorreta
-        };
-
-        respostas.push(resposta);
-      } else if (i <= 4) {
-        return (formularioInvalido = true);
-      }
-    }
-
-    obj.answers = respostas;
-    perguntasArr.push(obj);
-  });
-
-  if (formularioInvalido) {
-    return alert('Preencha os dados corretamente!');
-  }
-
-  novoQuizz.questions = perguntasArr;
-  avancarEtapa();
-  etapa++;
-};
-
-const validarEtapaTres = () => {
-  const blocosNiveis = document.querySelectorAll('.c-main__content');
-  const niveisArr = [];
-  const porcentagens = [];
-  let formularioInvalido = false;
-
-  blocosNiveis.forEach((item, idx) => {
-    const niveis = item.querySelectorAll('input');
-    const textarea = item.querySelector('textarea');
-
-    const titulo = niveis[0].value;
-    const valorMinimo = Number(niveis[1].value);
-    const url = niveis[2].value;
-    const descricao = textarea.value;
-
-    const tituloEhValido = titulo.length >= 10;
-    const valorMinimoEhValido = valorMinimo >= 0 && valorMinimo <= 100;
-    const descricaoEhValida = descricao.length >= 30;
-    const urlEhValida = validarURL(url);
-
-    if (
-      !tituloEhValido ||
-      !valorMinimoEhValido ||
-      !descricaoEhValida ||
-      !urlEhValida
-    ) {
-      return (formularioInvalido = true);
-    }
-
-    let obj = {
-      title: titulo,
-      image: url,
-      text: descricao,
-      minValue: valorMinimo
-    };
-
-    niveisArr.push(obj);
-    porcentagens.push(valorMinimo);
-  });
-
-  const valorMinimoEhValido = porcentagens.includes(0);
-
-  if (formularioInvalido || !valorMinimoEhValido) {
-    return alert('Preencha os dados corretamente!');
-  }
-
-  novoQuizz.levels = niveisArr;
-  enviarQuizz();
-  etapa === 1;
-};
-
-const avancarEtapa = () => {
-  if (etapa === 1) {
-    validarEtapaUm();
-  } else if (etapa === 2) {
-    validarEtapaDois();
-  } else if (etapa === 3) {
-    validarEtapaTres();
-  }
 };
 
 const carregarPaginaLista = () => {
@@ -493,6 +329,182 @@ const carregarPaginaQuizz = () => {
   formulario.addEventListener('submit', event => {
     event.preventDefault();
   });
+};
+
+const enviarQuizz = async () => {
+  try {
+    const response = await axios.post(`${baseURL}/quizzes`, novoQuizz);
+
+    const titulo = response.data.title;
+    const imagemURL = response.data.image;
+    const id = response.data.id;
+
+    carregarTelaSucesso(titulo, imagemURL, id);
+  } catch (error) {
+    alert('Houve um erro ao enviar o quizz. Por favor, tente novamente');
+    carregarPaginaQuizz();
+  }
+};
+
+const validarURL = url => {
+  const expression =
+    /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
+
+  const regex = new RegExp(expression);
+
+  if (url.match(regex)) {
+    return true;
+  }
+
+  return false;
+};
+
+const validarEtapaUm = () => {
+  const inputsInformacoesGerais = document.querySelectorAll('input');
+
+  const titulo = inputsInformacoesGerais[0].value;
+  const url = inputsInformacoesGerais[1].value;
+  const valorQuantidadePerguntas = inputsInformacoesGerais[2].value;
+  const valorQuantidadeNiveis = inputsInformacoesGerais[3].value;
+
+  const tituloEhValido = titulo.length >= 20 && titulo.length <= 65;
+  const urlEhValida = validarURL(url);
+  const quantidadePerguntasEhValida = valorQuantidadePerguntas >= 3;
+  const quantidadeNiveisEhValida = valorQuantidadeNiveis >= 2;
+
+  if (
+    !tituloEhValido ||
+    !urlEhValida ||
+    !quantidadePerguntasEhValida ||
+    !quantidadeNiveisEhValida
+  ) {
+    return alert('Preencha os dados corretamente');
+  }
+
+  novoQuizz = {
+    title: titulo,
+    image: url
+  };
+
+  quantidadePerguntas = valorQuantidadePerguntas;
+  quantidadeNiveis = valorQuantidadeNiveis;
+
+  carregarEtapaDois();
+  etapa++;
+};
+
+const validarEtapaDois = () => {
+  const blocosPergunta = document.querySelectorAll('.c-main__content');
+  const perguntasArr = [];
+  let formularioInvalido = false;
+
+  blocosPergunta.forEach(item => {
+    const respostas = [];
+    const perguntas = item.querySelectorAll('input');
+
+    // const RegExp = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
+    const RegExp = /^#[0-9a-fA-F]{6}$/i;
+    const corEhValida = RegExp.test(perguntas[1].value);
+    const tituloEhValido = perguntas[0].value.length >= 20;
+
+    if (!tituloEhValido || !corEhValida) {
+      return (formularioInvalido = true);
+    }
+
+    let obj = {
+      title: perguntas[0].value,
+      color: perguntas[1].value
+    };
+
+    for (let i = 2; i < perguntas.length; i += 2) {
+      const ehRespostaCorreta = i === 2;
+      const urlEhValida = validarURL(perguntas[i + 1].value);
+
+      if (perguntas[i].value.length > 0 && urlEhValida) {
+        let resposta = {
+          text: perguntas[i].value,
+          image: perguntas[i + 1].value,
+          isCorrectAnswer: ehRespostaCorreta
+        };
+
+        respostas.push(resposta);
+      } else if (i <= 4) {
+        return (formularioInvalido = true);
+      }
+    }
+
+    obj.answers = respostas;
+    perguntasArr.push(obj);
+  });
+
+  if (formularioInvalido) {
+    return alert('Preencha os dados corretamente!');
+  }
+
+  novoQuizz.questions = perguntasArr;
+  carregarEtapaTres();
+  etapa++;
+};
+
+const validarEtapaTres = () => {
+  const blocosNiveis = document.querySelectorAll('.c-main__content');
+  const niveisArr = [];
+  const porcentagens = [];
+  let formularioInvalido = false;
+
+  blocosNiveis.forEach(item => {
+    const niveis = item.querySelectorAll('input');
+    const textarea = item.querySelector('textarea');
+
+    const titulo = niveis[0].value;
+    const valorMinimo = Number(niveis[1].value);
+    const url = niveis[2].value;
+    const descricao = textarea.value;
+
+    const tituloEhValido = titulo.length >= 10;
+    const valorMinimoEhValido = valorMinimo >= 0 && valorMinimo <= 100;
+    const descricaoEhValida = descricao.length >= 30;
+    const urlEhValida = validarURL(url);
+
+    if (
+      !tituloEhValido ||
+      !valorMinimoEhValido ||
+      !descricaoEhValida ||
+      !urlEhValida
+    ) {
+      return (formularioInvalido = true);
+    }
+
+    let obj = {
+      title: titulo,
+      image: url,
+      text: descricao,
+      minValue: valorMinimo
+    };
+
+    niveisArr.push(obj);
+    porcentagens.push(valorMinimo);
+  });
+
+  const valorMinimoEhValido = porcentagens.includes(0);
+
+  if (formularioInvalido || !valorMinimoEhValido) {
+    return alert('Preencha os dados corretamente!');
+  }
+
+  novoQuizz.levels = niveisArr;
+  enviarQuizz();
+  etapa === 1;
+};
+
+const avancarEtapa = () => {
+  if (etapa === 1) {
+    validarEtapaUm();
+  } else if (etapa === 2) {
+    validarEtapaDois();
+  } else if (etapa === 3) {
+    validarEtapaTres();
+  }
 };
 
 carregarPaginaLista();

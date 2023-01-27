@@ -242,7 +242,8 @@ h1 {
 }
 
 .c-main button:hover,
-.c-main__content--hover:hover {
+.c-main__content--hover:hover,
+.c-sucesso__container-img:hover {
   cursor: pointer;
   filter: brightness(0.9);
 }
