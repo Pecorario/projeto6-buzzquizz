@@ -314,9 +314,11 @@ h1 {
 
 .opcoes-quizz,
 .quizzes-adicionados {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  /* display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: flex-start; */
 }
 
 .quizzes-adicionados {
@@ -517,6 +519,12 @@ h1 {
   .container-conteudos {
     width: 90%;
   }
+
+  .opcoes-quizz,
+  .quizzes-adicionados {
+    grid-template-columns: 1fr;
+  }
+
   .titulo-opcoes-quizz,
   .titulo-adicionar-quizz,
   .opcoes-quizz,

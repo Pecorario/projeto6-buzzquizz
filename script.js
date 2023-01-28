@@ -3,12 +3,18 @@ let quantidadePerguntas = 0;
 let quantidadeNiveis = 0;
 let novoQuizz;
 
+let listaMeusQuizzes = [];
 const listaQuizzes = [];
 
 const baseURL = 'https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes';
 
 const carregarQuizzes = async () => {
   const response = await axios.get(baseURL);
+
+  if (localStorage.getItem('meusQuizzes')) {
+    const meusQuizzesSerializados = localStorage.getItem('meusQuizzes');
+    listaMeusQuizzes = JSON.parse(meusQuizzesSerializados);
+  }
 
   listaQuizzes.push(...response.data);
 };
@@ -249,22 +255,6 @@ const carregarPaginaLista = async () => {
       </div>
 
       <div class="quizzes-adicionados esconder">
-        <div class="container-img">
-          <div class="background-img"></div>
-          <img
-            src="assets/simpsons.png"
-            alt=""
-          />
-          <p>O quão Potterhead é você?</p>
-        </div>
-        <div class="container-img">
-          <div class="background-img"></div>
-          <img
-            src="assets/preguica.png"
-            alt=""
-          />
-          <p>É ex-BBB ou ex-De férias com o Ex?</p>
-        </div>
       </div>
 
       <div class="criar-quizz">
@@ -278,6 +268,31 @@ const carregarPaginaLista = async () => {
   `;
 
   const lista = document.querySelector('.opcoes-quizz');
+
+  if (listaMeusQuizzes.length > 0) {
+    const quizzesAdicionados = document.querySelector('.quizzes-adicionados');
+    const tituloAdicionarQuizz = document.querySelector(
+      '.titulo-adicionar-quizz'
+    );
+    const criarQuizz = document.querySelector('.criar-quizz');
+
+    quizzesAdicionados.classList.remove('esconder');
+    tituloAdicionarQuizz.classList.remove('esconder');
+    criarQuizz.classList.add('esconder');
+
+    listaMeusQuizzes.map(item => {
+      quizzesAdicionados.innerHTML += `
+      <div class="container-img" onclick="carregarRespostas(${item.id})">
+          <div class="background-img"></div>
+          <img
+            src="${item.imagemURL}"
+            alt=""
+          />
+          <p>${item.titulo}</p>
+        </div>
+    `;
+    });
+  }
 
   listaQuizzes.map(item => {
     return (lista.innerHTML += `
@@ -356,6 +371,23 @@ const enviarQuizz = async () => {
     const titulo = response.data.title;
     const imagemURL = response.data.image;
     const id = response.data.id;
+
+    let quizzesArr = [];
+
+    if (localStorage.getItem('meusQuizzes')) {
+      const meusQuizzesSerializados = localStorage.getItem('meusQuizzes');
+      quizzesArr = JSON.parse(meusQuizzesSerializados);
+    }
+
+    const meuNovoQuizz = {
+      id,
+      titulo,
+      imagemURL
+    };
+
+    quizzesArr.push(meuNovoQuizz);
+    const quizzesSerializados = JSON.stringify(quizzesArr);
+    localStorage.setItem('meusQuizzes', quizzesSerializados);
 
     carregarTelaSucesso(titulo, imagemURL, id);
   } catch (error) {
