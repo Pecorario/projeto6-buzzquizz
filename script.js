@@ -6,7 +6,7 @@ let formularioInvalido = false;
 let novoQuizz;
 
 let listaMeusQuizzes = [];
-const listaQuizzes = [];
+let listaQuizzes = [];
 
 const baseURL = 'https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes';
 
@@ -28,6 +28,9 @@ const criarLoader = () => {
 const carregarQuizzes = async () => {
   try {
     criarLoader();
+
+    listaQuizzes = [];
+
     const response = await axios.get(baseURL);
 
     if (localStorage.getItem('meusQuizzes')) {
@@ -263,6 +266,30 @@ const carregarTelaSucesso = (tituloQuizz, imagemURL, id) => {
   `;
 };
 
+const deletar = async (event, id) => {
+  event.stopPropagation();
+
+  const quizz = listaMeusQuizzes.find(item => item.id === id);
+
+  if (confirm('Deseja realmente deletar este quizz?') === true) {
+    try {
+      await axios.delete(`${baseURL}/${id}`, {
+        headers: {
+          'Secret-Key': quizz.key
+        }
+      });
+
+      const listaNova = listaMeusQuizzes.filter(item => item.id !== id);
+      const quizzesSerializados = JSON.stringify(listaNova);
+      localStorage.setItem('meusQuizzes', quizzesSerializados);
+
+      carregarPaginaLista();
+    } catch (error) {
+      alert(error.response.data.message);
+    }
+  }
+};
+
 const carregarPaginaLista = async () => {
   const body = document.querySelector('body');
 
@@ -312,8 +339,17 @@ const carregarPaginaLista = async () => {
           <img
             src="${item.imagemURL}"
             alt=""
+            class="img-quizz"
           />
           <p>${item.titulo}</p>
+          <div class="quizz-menu">
+            <button class="quizz-editar" onclick="editar(event, ${item.id})">
+              <img src="assets/edit.svg" />
+            </button>
+            <button class="quizz-deletar" onclick="deletar(event, ${item.id})">
+              <img src="assets/delete.svg" />
+            </button>
+          </div>
         </div>
     `;
     });
@@ -326,6 +362,7 @@ const carregarPaginaLista = async () => {
         <img
           src=${item.image}
           alt=""
+          class="img-quizz"
         />
         <p>${item.title}</p>
     </div>
@@ -395,6 +432,7 @@ const enviarQuizz = async () => {
     const titulo = response.data.title;
     const imagemURL = response.data.image;
     const id = response.data.id;
+    const key = response.data.key;
 
     let quizzesArr = [];
 
@@ -406,7 +444,8 @@ const enviarQuizz = async () => {
     const meuNovoQuizz = {
       id,
       titulo,
-      imagemURL
+      imagemURL,
+      key
     };
 
     quizzesArr.push(meuNovoQuizz);
