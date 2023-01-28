@@ -8,15 +8,36 @@ const listaQuizzes = [];
 
 const baseURL = 'https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes';
 
+const criarLoader = () => {
+  const body = document.querySelector('body');
+
+  body.innerHTML = `
+    <header>
+      <h1>BuzzQuizz</h1>
+    </header>
+
+    <div class="container-loader">
+      <span class="loader"></span>
+      <p>Carregando</p>
+    </div>
+  `;
+};
+
 const carregarQuizzes = async () => {
-  const response = await axios.get(baseURL);
+  try {
+    criarLoader();
+    const response = await axios.get(baseURL);
 
-  if (localStorage.getItem('meusQuizzes')) {
-    const meusQuizzesSerializados = localStorage.getItem('meusQuizzes');
-    listaMeusQuizzes = JSON.parse(meusQuizzesSerializados);
+    if (localStorage.getItem('meusQuizzes')) {
+      const meusQuizzesSerializados = localStorage.getItem('meusQuizzes');
+      listaMeusQuizzes = JSON.parse(meusQuizzesSerializados);
+    }
+
+    listaQuizzes.push(...response.data);
+  } catch (error) {
+    alert('Houve um erro ao carregar os quizzes');
+    carregarPaginaLista();
   }
-
-  listaQuizzes.push(...response.data);
 };
 
 const esconderBlocos = itemIdx => {
@@ -213,28 +234,34 @@ const carregarEtapaTres = () => {
 };
 
 const carregarTelaSucesso = (tituloQuizz, imagemURL, id) => {
-  const main = document.querySelector('.c-main');
+  const body = document.querySelector('body');
 
-  main.innerHTML = `
-    <div class="c-main__sucesso">
-      <h2>Seu quizz está pronto!</h2>
+  body.innerHTML = `
+    <header>
+      <h1>BuzzQuizz</h1>
+    </header>
 
-      <div class="c-sucesso__container-img">
-        <div class="c-sucesso__background"></div>
-        <img
-          src=${imagemURL}
-          alt=""
-        />
-        <p>${tituloQuizz}</p>
-      </div>
+    <main class="c-main">
+      <div class="c-main__sucesso">
+        <h2>Seu quizz está pronto!</h2>
 
-      <div class="c-sucesso__container-button">
-        <button class="c-sucesso__button-acessar">Acessar Quizz</button>
+        <div class="c-sucesso__container-img">
+          <div class="c-sucesso__background"></div>
+          <img
+            src=${imagemURL}
+            alt=""
+          />
+          <p>${tituloQuizz}</p>
+        </div>
+
+        <div class="c-sucesso__container-button">
+          <button class="c-sucesso__button-acessar">Acessar Quizz</button>
+        </div>
+        <div class="c-sucesso__container-button">
+          <button class="c-sucesso__button-voltar" onclick="carregarPaginaLista()">Voltar pra home</button>
+        </div>
       </div>
-      <div class="c-sucesso__container-button">
-        <button class="c-sucesso__button-voltar" onclick="carregarPaginaLista()">Voltar pra home</button>
-      </div>
-    </div>
+    </main>
   `;
 };
 
@@ -366,6 +393,7 @@ const carregarPaginaQuizz = () => {
 
 const enviarQuizz = async () => {
   try {
+    criarLoader();
     const response = await axios.post(`${baseURL}`, novoQuizz);
 
     const titulo = response.data.title;
