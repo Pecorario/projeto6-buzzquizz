@@ -1,6 +1,8 @@
 let etapa = 1;
 let quantidadePerguntas = 0;
 let quantidadeNiveis = 0;
+let formularioInvalido = false;
+
 let novoQuizz;
 
 let listaMeusQuizzes = [];
@@ -97,7 +99,6 @@ const carregarEtapaDois = () => {
         <div class="c-main__line">
           <input
             type="text"
-            minlength="20"
             placeholder="Texto da pergunta"
             id="c-pergunta-${i + 1}__input--texto"
           />
@@ -114,7 +115,6 @@ const carregarEtapaDois = () => {
             type="text"
             placeholder="Resposta correta"
             id="c-pergunta-${i + 1}__input--resposta-correta"
-            required
           />
           <input
             type="url"
@@ -129,7 +129,6 @@ const carregarEtapaDois = () => {
             type="text"
             placeholder="Resposta incorreta 1"
             id="c-pergunta-${i + 1}__input--resposta-incorreta-1"
-            required
           />
           <input
             type="url"
@@ -197,7 +196,6 @@ const carregarEtapaTres = () => {
         <div class="c-main__line">
           <input
             type="text"
-            minlength="10"
             placeholder="Título do nível"
             id="c-nivel-${i + 1}__input--titulo"
           />
@@ -245,7 +243,7 @@ const carregarTelaSucesso = (tituloQuizz, imagemURL, id) => {
       <div class="c-main__sucesso">
         <h2>Seu quizz está pronto!</h2>
 
-        <div class="c-sucesso__container-img">
+        <div class="c-sucesso__container-img" onclick="carregarPerguntas(${id})">
           <div class="c-sucesso__background"></div>
           <img
             src=${imagemURL}
@@ -255,7 +253,7 @@ const carregarTelaSucesso = (tituloQuizz, imagemURL, id) => {
         </div>
 
         <div class="c-sucesso__container-button">
-          <button class="c-sucesso__button-acessar">Acessar Quizz</button>
+          <button class="c-sucesso__button-acessar" onclick="carregarPerguntas(${id})">Acessar Quizz</button>
         </div>
         <div class="c-sucesso__container-button">
           <button class="c-sucesso__button-voltar" onclick="carregarPaginaLista()">Voltar pra home</button>
@@ -351,8 +349,6 @@ const carregarPaginaQuizz = () => {
           <div class="c-informacoes-gerais__content">
             <input
               type="text"
-              minlength="20"
-              maxlength="65"
               placeholder="Título do seu quizz"
               id="c-informacoes-gerais__input--titulo"
             />
@@ -424,6 +420,50 @@ const enviarQuizz = async () => {
   }
 };
 
+const limparErros = () => {
+  const spansErro = document.querySelectorAll('span');
+  const inputs = document.querySelectorAll('input');
+  const textarea = document.querySelector('textarea');
+
+  if (textarea) {
+    textarea.style.background = '#FFF';
+  }
+
+  formularioInvalido = false;
+
+  spansErro.forEach(item => item.remove());
+  inputs.forEach(item => (item.style.background = '#FFF'));
+};
+
+const mostrarErro = (texto, referencia) => {
+  const novoElemento = document.createElement('span');
+  novoElemento.classList.add('span-error');
+  novoElemento.innerHTML = texto;
+
+  referencia.style.background = '#FFE9E9';
+
+  if (!formularioInvalido) {
+    const mainContent = document.querySelectorAll('.c-main__content');
+
+    if (mainContent.length > 0) {
+      const elementoPai = referencia.parentNode.parentNode;
+
+      mainContent.forEach((item, idx) => {
+        if (item.innerHTML === elementoPai.innerHTML) {
+          esconderBlocos(idx);
+          referencia.focus();
+        }
+      });
+    }
+
+    referencia.focus();
+  }
+
+  formularioInvalido = true;
+
+  referencia.parentNode.insertBefore(novoElemento, referencia.nextSibling);
+};
+
 const validarURL = url => {
   const expression =
     /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
@@ -438,55 +478,76 @@ const validarURL = url => {
 };
 
 const validarEtapaUm = () => {
+  limparErros();
+
   const inputsInformacoesGerais = document.querySelectorAll('input');
 
-  const titulo = inputsInformacoesGerais[0].value;
-  const url = inputsInformacoesGerais[1].value;
-  const valorQuantidadePerguntas = inputsInformacoesGerais[2].value;
-  const valorQuantidadeNiveis = inputsInformacoesGerais[3].value;
+  const titulo = inputsInformacoesGerais[0];
+  const url = inputsInformacoesGerais[1];
+  const valorQuantidadePerguntas = inputsInformacoesGerais[2];
+  const valorQuantidadeNiveis = inputsInformacoesGerais[3];
 
-  const tituloEhValido = titulo.length >= 20 && titulo.length <= 65;
-  const urlEhValida = validarURL(url);
-  const quantidadePerguntasEhValida = valorQuantidadePerguntas >= 3;
-  const quantidadeNiveisEhValida = valorQuantidadeNiveis >= 2;
+  const tituloEhValido = titulo.value.length >= 20 && titulo.value.length <= 65;
+  const urlEhValida = validarURL(url.value);
+  const quantidadePerguntasEhValida = valorQuantidadePerguntas.value >= 3;
+  const quantidadeNiveisEhValida = valorQuantidadeNiveis.value >= 2;
 
-  if (
-    !tituloEhValido ||
-    !urlEhValida ||
-    !quantidadePerguntasEhValida ||
-    !quantidadeNiveisEhValida
-  ) {
-    return alert('Preencha os dados corretamente');
+  if (!tituloEhValido) {
+    mostrarErro('O título deve ter entre 20 e 65 caracteres', titulo);
   }
 
-  novoQuizz = {
-    title: titulo,
-    image: url
-  };
+  if (!urlEhValida) {
+    mostrarErro('O valor informado não é uma URL válida', url);
+  }
 
-  quantidadePerguntas = valorQuantidadePerguntas;
-  quantidadeNiveis = valorQuantidadeNiveis;
+  if (!quantidadePerguntasEhValida) {
+    mostrarErro(
+      'O quizz deve ter no mínimo 3 perguntas',
+      valorQuantidadePerguntas
+    );
+  }
 
-  carregarEtapaDois();
-  etapa++;
+  if (!quantidadeNiveisEhValida) {
+    mostrarErro('O quizz deve ter no mínimo 2 níveis', valorQuantidadeNiveis);
+  }
+
+  if (!formularioInvalido) {
+    novoQuizz = {
+      title: titulo.value,
+      image: url.value
+    };
+
+    quantidadePerguntas = valorQuantidadePerguntas.value;
+    quantidadeNiveis = valorQuantidadeNiveis.value;
+
+    carregarEtapaDois();
+    etapa++;
+  }
 };
 
 const validarEtapaDois = () => {
+  limparErros();
+
   const blocosPergunta = document.querySelectorAll('.c-main__content');
   const perguntasArr = [];
-  let formularioInvalido = false;
 
   blocosPergunta.forEach(item => {
     const respostas = [];
     const perguntas = item.querySelectorAll('input');
 
-    // const RegExp = /^#(?:[0-9a-fA-F]{3}){1,2}$/;
     const RegExp = /^#[0-9a-fA-F]{6}$/i;
     const corEhValida = RegExp.test(perguntas[1].value);
     const tituloEhValido = perguntas[0].value.length >= 20;
 
-    if (!tituloEhValido || !corEhValida) {
-      return (formularioInvalido = true);
+    if (!tituloEhValido) {
+      mostrarErro('O título deve ter pelo menos 20 caracteres', perguntas[0]);
+    }
+
+    if (!corEhValida) {
+      mostrarErro(
+        'O formato de cor deve ser um hexadecimal (Ex: #F9F9F9)',
+        perguntas[1]
+      );
     }
 
     let obj = {
@@ -507,72 +568,117 @@ const validarEtapaDois = () => {
 
         respostas.push(resposta);
       } else if (i <= 4) {
-        return (formularioInvalido = true);
+        if (perguntas[i].value.length === 0) {
+          mostrarErro('Campo obrigatório', perguntas[i]);
+        }
+        if (!urlEhValida) {
+          mostrarErro(
+            'O valor informado não é uma URL válida',
+            perguntas[i + 1]
+          );
+        }
+      } else {
+        if (
+          perguntas[i].value.length > 0 ||
+          (perguntas[i + 1].value.length > 0 && !urlEhValida)
+        ) {
+          mostrarErro(
+            'O valor informado não é uma URL válida',
+            perguntas[i + 1]
+          );
+        }
+
+        if (
+          perguntas[i + 1].value.length > 0 &&
+          perguntas[i].value.length === 0
+        ) {
+          mostrarErro('Campo obrigatório', perguntas[i]);
+        }
       }
     }
 
-    obj.answers = respostas;
-    perguntasArr.push(obj);
+    if (corEhValida && tituloEhValido && !formularioInvalido) {
+      obj.answers = respostas;
+      perguntasArr.push(obj);
+    }
   });
 
-  if (formularioInvalido) {
-    return alert('Preencha os dados corretamente!');
+  if (!formularioInvalido) {
+    novoQuizz.questions = perguntasArr;
+    carregarEtapaTres();
+    etapa++;
   }
-
-  novoQuizz.questions = perguntasArr;
-  carregarEtapaTres();
-  etapa++;
 };
 
 const validarEtapaTres = () => {
+  limparErros();
+
   const blocosNiveis = document.querySelectorAll('.c-main__content');
   const niveisArr = [];
   const porcentagens = [];
-  let formularioInvalido = false;
 
   blocosNiveis.forEach(item => {
     const niveis = item.querySelectorAll('input');
     const textarea = item.querySelector('textarea');
 
-    const titulo = niveis[0].value;
-    const valorMinimo = Number(niveis[1].value);
-    const url = niveis[2].value;
-    const descricao = textarea.value;
+    const titulo = niveis[0];
+    const valorMinimo = niveis[1];
+    const url = niveis[2];
+    const descricao = textarea;
 
-    const tituloEhValido = titulo.length >= 10;
-    const valorMinimoEhValido = valorMinimo >= 0 && valorMinimo <= 100;
-    const descricaoEhValida = descricao.length >= 30;
-    const urlEhValida = validarURL(url);
+    const tituloEhValido = titulo.value.length >= 10;
+    const valorMinimoEhValido =
+      valorMinimo.value.length > 0 &&
+      Number(valorMinimo.value) >= 0 &&
+      Number(valorMinimo.value) <= 100;
+    const descricaoEhValida = descricao.value.length >= 30;
+    const urlEhValida = validarURL(url.value);
 
-    if (
-      !tituloEhValido ||
-      !valorMinimoEhValido ||
-      !descricaoEhValida ||
-      !urlEhValida
-    ) {
-      return (formularioInvalido = true);
+    if (!tituloEhValido) {
+      mostrarErro('O título deve ter pelo menos 10 caracteres', titulo);
     }
 
-    let obj = {
-      title: titulo,
-      image: url,
-      text: descricao,
-      minValue: valorMinimo
-    };
+    if (!urlEhValida) {
+      mostrarErro('O valor informado não é uma URL válida', url);
+    }
 
-    niveisArr.push(obj);
-    porcentagens.push(valorMinimo);
+    if (!valorMinimoEhValido) {
+      mostrarErro('A porcentagem deve estar entre 0 e 100', valorMinimo);
+    }
+
+    if (!descricaoEhValida) {
+      mostrarErro('A descrição deve ter pelo menos 30 caracteres', descricao);
+    }
+
+    if (!formularioInvalido) {
+      let obj = {
+        title: titulo.value,
+        image: url.value,
+        text: descricao.value,
+        minValue: Number(valorMinimo.value)
+      };
+
+      niveisArr.push(obj);
+      porcentagens.push(Number(valorMinimo.value));
+    }
   });
 
   const valorMinimoEhValido = porcentagens.includes(0);
 
-  if (formularioInvalido || !valorMinimoEhValido) {
-    return alert('Preencha os dados corretamente!');
+  if (!formularioInvalido && !valorMinimoEhValido) {
+    blocosNiveis.forEach(item => {
+      const niveis = item.querySelectorAll('input');
+
+      const valorMinimo = niveis[1];
+      mostrarErro('Pelo menos uma porcentagem deve ser 0', valorMinimo);
+    });
   }
 
-  novoQuizz.levels = niveisArr;
-  enviarQuizz();
-  etapa === 1;
+  if (!formularioInvalido && valorMinimoEhValido) {
+    novoQuizz.levels = niveisArr;
+    enviarQuizz();
+    etapa === 1;
+  }
 };
 
 const avancarEtapa = () => {
