@@ -334,7 +334,7 @@ const carregarPaginaLista = async () => {
 
     listaMeusQuizzes.map(item => {
       quizzesAdicionados.innerHTML += `
-      <div class="container-img" onclick="carregarRespostas(${item.id})">
+      <div class="container-img" onclick="carregarPerguntas(${item.id})">
           <div class="background-img"></div>
           <img
             src="${item.imagemURL}"
@@ -357,7 +357,7 @@ const carregarPaginaLista = async () => {
 
   listaQuizzes.map(item => {
     return (lista.innerHTML += `
-      <div class="container-img" onclick="carregarRespostas(${item.id})">
+      <div class="container-img" onclick="carregarPerguntas(${item.id})">
         <div class="background-img"></div>
         <img
           src=${item.image}

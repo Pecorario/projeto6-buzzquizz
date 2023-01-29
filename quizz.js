@@ -12,88 +12,16 @@ function carregarRespostas(data) {
             </div>
         </div>
     </div>
-    <div>
-      <div></div>
-      <div></div>
-      <div></div>
+    <div class="">
+      ${montaPerguntas(data.questions)}
     </div>
     `;
 }
 
-let perguntas = [
-  {
-    id: 1,
-    title: 'Título do quizz',
-    image: 'https://http.cat/411.jpg',
-    questions: [
-      {
-        title: 'Título da pergunta 1',
-        color: '#123456',
-        answers: [
-          {
-            text: 'Texto da resposta 1',
-            image: 'https://http.cat/411.jpg',
-            isCorrectAnswer: true
-          },
-          {
-            text: 'Texto da resposta 2',
-            image: 'https://http.cat/412.jpg',
-            isCorrectAnswer: false
-          }
-        ]
-      },
-      {
-        title: 'Título da pergunta 2',
-        color: '#123456',
-        answers: [
-          {
-            text: 'Texto da resposta 1',
-            image: 'https://http.cat/411.jpg',
-            isCorrectAnswer: true
-          },
-          {
-            text: 'Texto da resposta 2',
-            image: 'https://http.cat/412.jpg',
-            isCorrectAnswer: false
-          }
-        ]
-      },
-      {
-        title: 'Título da pergunta 3',
-        color: '#123456',
-        answers: [
-          {
-            text: 'Texto da resposta 1',
-            image: 'https://http.cat/411.jpg',
-            isCorrectAnswer: true
-          },
-          {
-            text: 'Texto da resposta 2',
-            image: 'https://http.cat/412.jpg',
-            isCorrectAnswer: false
-          }
-        ]
-      }
-    ],
-    levels: [
-      {
-        title: 'Título do nível 1',
-        image: 'https://http.cat/411.jpg',
-        text: 'Descrição do nível 1',
-        minValue: 0
-      },
-      {
-        title: 'Título do nível 2',
-        image: 'https://http.cat/412.jpg',
-        text: 'Descrição do nível 2',
-        minValue: 50
-      }
-    ]
-  }
-];
+let perguntas = [];
 
 function carregarPerguntas() {
-  const id = 1;
+  const id = 16500;
 
   axios
     .get(`https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes/${id}`)
@@ -103,4 +31,36 @@ function carregarPerguntas() {
     });
 }
 
-// carregarPerguntas();
+carregarPerguntas();
+
+function montaPerguntas(perguntas) {
+  let perguntashtml = "";
+
+  perguntas.forEach(pergunta => {
+    console.log(pergunta);
+    perguntashtml += 
+    `<div class="perguntas">
+      <p>${pergunta.title}</p>
+      <p>${pergunta.color}</p>
+      ${montaRespostas(pergunta.answers)}
+    </div>`
+
+  });
+   
+  return perguntashtml
+}
+
+function montaRespostas(respostas) {
+  let respostashtml = "";
+
+  respostas.forEach(resposta => {
+    respostashtml += 
+    `<div>
+      <p>${resposta.text}</p>
+      <img src="${resposta.image}">
+      <div>${resposta.isCorrectAnswer}</div>
+    </div>`
+  });
+
+  return respostashtml
+}
