@@ -38,7 +38,6 @@ function montaPerguntas(perguntas) {
     perguntashtml += 
     `<div class="perguntas">
       <p>${pergunta.title}</p>
-      <p>${pergunta.color}</p>
       ${montaRespostas(pergunta.answers)}
     </div>`
 
@@ -52,10 +51,9 @@ function montaRespostas(respostas) {
 
   respostas.forEach(resposta => {
     respostashtml += 
-    `<div>
-      <img src="${resposta.image}">
-      <p>${resposta.text}</p>
-      <div>${resposta.isCorrectAnswer}</div>
+    `<div class="respostas">
+      <img src="${resposta.image}" class="respostas-img">
+      <p class="texto-resposta">${resposta.text}</p>
     </div>`
   });
 

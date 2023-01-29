@@ -715,13 +715,34 @@ h1 {
   filter: brightness(0.9);
 }
 
-.container-perguntas {
-  margin-top: 250px;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
+@media (max-width: 1090px) {
+  .perguntas > p {
+    width: 688.16px;
+    height: 137.99px;
+  }
 }
 
-.perguntas {
-  
+.container-perguntas {
+  margin-top: 200px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.perguntas > p{
+  font-family: 'Roboto', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 340px;
+  height: 89px;
+  background-color: #ec362d;
+}
+
+.respostas > .respostas-img {
+  width: 163px;
+  height: 113px;
+  object-fit: cover;
 }
