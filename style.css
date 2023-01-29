@@ -9,11 +9,13 @@ body {
   background: #fafafa;
   display: flex;
   justify-content: center;
+
+  overflow-x: hidden;
 }
 
 /* GERAL */
 header {
-  width: 100%;
+  width: 100vw;
   height: 69px;
 
   display: flex;
