@@ -714,3 +714,14 @@ h1 {
   cursor: pointer;
   filter: brightness(0.9);
 }
+
+.container-perguntas {
+  margin-top: 250px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.perguntas {
+  
+}

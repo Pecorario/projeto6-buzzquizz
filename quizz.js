@@ -12,7 +12,7 @@ function carregarRespostas(data) {
             </div>
         </div>
     </div>
-    <div class="">
+    <div class="container-perguntas">
       ${montaPerguntas(data.questions)}
     </div>
     `;
@@ -20,8 +20,7 @@ function carregarRespostas(data) {
 
 let perguntas = [];
 
-function carregarPerguntas() {
-  const id = 16500;
+function carregarPerguntas(id) {
 
   axios
     .get(`https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes/${id}`)
@@ -30,8 +29,6 @@ function carregarPerguntas() {
       carregarRespostas(resposta.data);
     });
 }
-
-carregarPerguntas();
 
 function montaPerguntas(perguntas) {
   let perguntashtml = "";
@@ -56,8 +53,8 @@ function montaRespostas(respostas) {
   respostas.forEach(resposta => {
     respostashtml += 
     `<div>
-      <p>${resposta.text}</p>
       <img src="${resposta.image}">
+      <p>${resposta.text}</p>
       <div>${resposta.isCorrectAnswer}</div>
     </div>`
   });
