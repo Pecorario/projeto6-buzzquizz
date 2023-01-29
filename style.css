@@ -9,13 +9,11 @@ body {
   background: #fafafa;
   display: flex;
   justify-content: center;
-
-  overflow-x: hidden;
 }
 
 /* GERAL */
 header {
-  width: 100vw;
+  width: 100%;
   height: 69px;
 
   display: flex;
@@ -501,6 +499,8 @@ h1 {
 .container-img {
   width: 100%;
   height: 53vw;
+
+  word-break: break-word;
 
   display: flex;
   position: relative;
