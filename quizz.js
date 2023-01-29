@@ -12,6 +12,11 @@ function carregarRespostas(data) {
             </div>
         </div>
     </div>
+    <div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
     `;
 }
 
