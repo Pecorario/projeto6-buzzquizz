@@ -10,6 +10,109 @@ let listaQuizzes = [];
 
 const baseURL = 'https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes';
 
+const deletarQuizz = async (event, id) => {
+  event.stopPropagation();
+
+  const quizz = listaMeusQuizzes.find(item => item.id === id);
+
+  if (confirm('Deseja realmente deletar este quizz?') === true) {
+    try {
+      await axios.delete(`${baseURL}/${id}`, {
+        headers: {
+          'Secret-Key': quizz.key
+        }
+      });
+
+      const listaNova = listaMeusQuizzes.filter(item => item.id !== id);
+      const quizzesSerializados = JSON.stringify(listaNova);
+      localStorage.setItem('meusQuizzes', quizzesSerializados);
+
+      carregarPaginaLista();
+    } catch (error) {
+      alert(error.response.data.message);
+    }
+  }
+};
+
+const enviarQuizz = async () => {
+  try {
+    criarLoader();
+    const response = await axios.post(`${baseURL}`, novoQuizz);
+
+    const titulo = response.data.title;
+    const imagemURL = response.data.image;
+    const id = response.data.id;
+    const key = response.data.key;
+
+    let quizzesArr = [];
+
+    if (localStorage.getItem('meusQuizzes')) {
+      const meusQuizzesSerializados = localStorage.getItem('meusQuizzes');
+      quizzesArr = JSON.parse(meusQuizzesSerializados);
+    }
+
+    const meuNovoQuizz = {
+      id,
+      titulo,
+      imagemURL,
+      key
+    };
+
+    quizzesArr.push(meuNovoQuizz);
+    const quizzesSerializados = JSON.stringify(quizzesArr);
+    localStorage.setItem('meusQuizzes', quizzesSerializados);
+
+    carregarTelaSucesso(titulo, imagemURL, id);
+  } catch (error) {
+    alert('Houve um erro ao enviar o quizz. Por favor, tente novamente');
+    carregarPaginaCriarQuizz();
+  }
+};
+
+const limparErros = () => {
+  const spansErro = document.querySelectorAll('span');
+  const inputs = document.querySelectorAll('input');
+  const textarea = document.querySelector('textarea');
+
+  if (textarea) {
+    textarea.style.background = '#FFF';
+  }
+
+  formularioInvalido = false;
+
+  spansErro.forEach(item => item.remove());
+  inputs.forEach(item => (item.style.background = '#FFF'));
+};
+
+const mostrarErro = (texto, referencia) => {
+  const novoElemento = document.createElement('span');
+  novoElemento.classList.add('span-error');
+  novoElemento.innerHTML = texto;
+
+  referencia.style.background = '#FFE9E9';
+
+  if (!formularioInvalido) {
+    const mainContent = document.querySelectorAll('.c-main__content');
+
+    if (mainContent.length > 0) {
+      const elementoPai = referencia.parentNode.parentNode;
+
+      mainContent.forEach((item, idx) => {
+        if (item.innerHTML === elementoPai.innerHTML) {
+          esconderBlocos(idx);
+          referencia.focus();
+        }
+      });
+    }
+
+    referencia.focus();
+  }
+
+  formularioInvalido = true;
+
+  referencia.parentNode.insertBefore(novoElemento, referencia.nextSibling);
+};
+
 const criarLoader = () => {
   const body = document.querySelector('body');
 
@@ -23,26 +126,6 @@ const criarLoader = () => {
       <p>Carregando</p>
     </div>
   `;
-};
-
-const carregarQuizzes = async () => {
-  try {
-    criarLoader();
-
-    listaQuizzes = [];
-
-    const response = await axios.get(baseURL);
-
-    if (localStorage.getItem('meusQuizzes')) {
-      const meusQuizzesSerializados = localStorage.getItem('meusQuizzes');
-      listaMeusQuizzes = JSON.parse(meusQuizzesSerializados);
-    }
-
-    listaQuizzes.push(...response.data);
-  } catch (error) {
-    alert('Houve um erro ao carregar os quizzes');
-    carregarPaginaLista();
-  }
 };
 
 const esconderBlocos = itemIdx => {
@@ -80,6 +163,26 @@ const esconderBlocos = itemIdx => {
       });
     }
   });
+};
+
+const carregarQuizzes = async () => {
+  try {
+    criarLoader();
+
+    listaQuizzes = [];
+
+    const response = await axios.get(baseURL);
+
+    if (localStorage.getItem('meusQuizzes')) {
+      const meusQuizzesSerializados = localStorage.getItem('meusQuizzes');
+      listaMeusQuizzes = JSON.parse(meusQuizzesSerializados);
+    }
+
+    listaQuizzes.push(...response.data);
+  } catch (error) {
+    alert('Houve um erro ao carregar os quizzes');
+    carregarPaginaLista();
+  }
 };
 
 const carregarEtapaDois = () => {
@@ -266,30 +369,6 @@ const carregarTelaSucesso = (tituloQuizz, imagemURL, id) => {
   `;
 };
 
-const deletar = async (event, id) => {
-  event.stopPropagation();
-
-  const quizz = listaMeusQuizzes.find(item => item.id === id);
-
-  if (confirm('Deseja realmente deletar este quizz?') === true) {
-    try {
-      await axios.delete(`${baseURL}/${id}`, {
-        headers: {
-          'Secret-Key': quizz.key
-        }
-      });
-
-      const listaNova = listaMeusQuizzes.filter(item => item.id !== id);
-      const quizzesSerializados = JSON.stringify(listaNova);
-      localStorage.setItem('meusQuizzes', quizzesSerializados);
-
-      carregarPaginaLista();
-    } catch (error) {
-      alert(error.response.data.message);
-    }
-  }
-};
-
 const carregarPaginaLista = async () => {
   const body = document.querySelector('body');
 
@@ -303,7 +382,7 @@ const carregarPaginaLista = async () => {
     <div class="container-conteudos">
       <div class="titulo-adicionar-quizz esconder">
           <p>Seus Quizzes</p>
-          <ion-icon name="add-outline" onclick="carregarPaginaQuizz()">
+          <ion-icon name="add-outline" onclick="carregarPaginaCriarQuizz()">
       </div>
 
       <div class="quizzes-adicionados esconder">
@@ -311,7 +390,7 @@ const carregarPaginaLista = async () => {
 
       <div class="criar-quizz">
           <p>Você não criou nenhum </br>quizz ainda :(</p>
-          <button onclick="carregarPaginaQuizz()">Criar Quizz</button>
+          <button onclick="carregarPaginaCriarQuizz()">Criar Quizz</button>
       </div>
       <div class="titulo-opcoes-quizz">Todos os Quizzes</div>
       <div class="opcoes-quizz">
@@ -346,7 +425,7 @@ const carregarPaginaLista = async () => {
             <button class="quizz-editar" onclick="editar(event, ${item.id})">
               <img src="assets/edit.svg" />
             </button>
-            <button class="quizz-deletar" onclick="deletar(event, ${item.id})">
+            <button class="quizz-deletar" onclick="deletarQuizz(event, ${item.id})">
               <img src="assets/delete.svg" />
             </button>
           </div>
@@ -370,7 +449,7 @@ const carregarPaginaLista = async () => {
   });
 };
 
-const carregarPaginaQuizz = () => {
+const carregarPaginaCriarQuizz = () => {
   const body = document.querySelector('body');
 
   body.innerHTML = `
@@ -422,85 +501,6 @@ const carregarPaginaQuizz = () => {
   formulario.addEventListener('submit', event => {
     event.preventDefault();
   });
-};
-
-const enviarQuizz = async () => {
-  try {
-    criarLoader();
-    const response = await axios.post(`${baseURL}`, novoQuizz);
-
-    const titulo = response.data.title;
-    const imagemURL = response.data.image;
-    const id = response.data.id;
-    const key = response.data.key;
-
-    let quizzesArr = [];
-
-    if (localStorage.getItem('meusQuizzes')) {
-      const meusQuizzesSerializados = localStorage.getItem('meusQuizzes');
-      quizzesArr = JSON.parse(meusQuizzesSerializados);
-    }
-
-    const meuNovoQuizz = {
-      id,
-      titulo,
-      imagemURL,
-      key
-    };
-
-    quizzesArr.push(meuNovoQuizz);
-    const quizzesSerializados = JSON.stringify(quizzesArr);
-    localStorage.setItem('meusQuizzes', quizzesSerializados);
-
-    carregarTelaSucesso(titulo, imagemURL, id);
-  } catch (error) {
-    alert('Houve um erro ao enviar o quizz. Por favor, tente novamente');
-    carregarPaginaQuizz();
-  }
-};
-
-const limparErros = () => {
-  const spansErro = document.querySelectorAll('span');
-  const inputs = document.querySelectorAll('input');
-  const textarea = document.querySelector('textarea');
-
-  if (textarea) {
-    textarea.style.background = '#FFF';
-  }
-
-  formularioInvalido = false;
-
-  spansErro.forEach(item => item.remove());
-  inputs.forEach(item => (item.style.background = '#FFF'));
-};
-
-const mostrarErro = (texto, referencia) => {
-  const novoElemento = document.createElement('span');
-  novoElemento.classList.add('span-error');
-  novoElemento.innerHTML = texto;
-
-  referencia.style.background = '#FFE9E9';
-
-  if (!formularioInvalido) {
-    const mainContent = document.querySelectorAll('.c-main__content');
-
-    if (mainContent.length > 0) {
-      const elementoPai = referencia.parentNode.parentNode;
-
-      mainContent.forEach((item, idx) => {
-        if (item.innerHTML === elementoPai.innerHTML) {
-          esconderBlocos(idx);
-          referencia.focus();
-        }
-      });
-    }
-
-    referencia.focus();
-  }
-
-  formularioInvalido = true;
-
-  referencia.parentNode.insertBefore(novoElemento, referencia.nextSibling);
 };
 
 const validarURL = url => {

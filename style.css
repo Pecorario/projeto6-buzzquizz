@@ -406,68 +406,21 @@ h1 {
 
 .opcoes-quizz,
 .quizzes-adicionados {
+  width: 1066px;
+
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  gap: 15px;
+}
+
+.opcoes-quizz {
+  padding-bottom: 30px;
 }
 
 .quizzes-adicionados {
-  width: 1066px;
+  margin-bottom: 48px;
 }
 
-/* .quizz1,
-.quizz2,
-.quizzadd1,
-.quizzadd2 {
-  width: 340px;
-  height: 181px;
-  background-color: red;
-  background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(0, 0, 0, 0.5) 64.58%,
-      #0000003b 100%
-    ),
-    url(./assets/simpsons.png);
-  background-size: auto;
-  border-radius: 5px;
-  display: flex;
-  align-items: flex-end;
-  margin-bottom: 12px;
-  margin-right: 15px;
-} */
-
-/* .quizz2 {
-  background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(0, 0, 0, 0.5) 64.58%,
-      #0000003b 100%
-    ),
-    url(./assets/preguica.png);
-}
-
-.quizzadd1 {
-  background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(0, 0, 0, 0.5) 64.58%,
-      #0000003b 100%
-    ),
-    url(./assets/harrypotter.png);
-}
-
-.quizzadd2 {
-  background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(0, 0, 0, 0.5) 64.58%,
-      #0000003b 100%
-    ),
-    url(./assets/deferiascomex.png);
-} */
-
-/* .quizzadd1 p,
-.quizzadd2 p, */
 .background-quizz p {
   font-style: normal;
   font-weight: 400;
@@ -477,11 +430,6 @@ h1 {
   margin-left: 18px;
   margin-bottom: 7px;
 }
-
-/* .quizzadd1 p,
-.quizzadd2 p {
-  margin-bottom: 20px;
-} */
 
 .titulo-adicionar-quizz ion-icon {
   color: #ffffff;
@@ -498,12 +446,16 @@ h1 {
 
 .container-img {
   width: 100%;
-  height: 53vw;
+  height: 181px;
 
   word-break: break-word;
 
   display: flex;
   position: relative;
+}
+
+.container-img p {
+  bottom: 10px;
 }
 
 .container-img img {
@@ -556,24 +508,6 @@ h1 {
 }
 
 @media (min-width: 1100px) {
-  .opcoes-quizz,
-  .quizzes-adicionados {
-    gap: 15px;
-  }
-
-  .quizzes-adicionados {
-    margin-bottom: 48px;
-  }
-
-  .container-img {
-    width: 100%;
-    height: 181px;
-  }
-
-  .container-img p {
-    bottom: 10px;
-  }
-
   /* CRIAR QUIZZ - FORMULÁRIO */
   .c-main {
     padding-top: 140px;
@@ -650,11 +584,18 @@ h1 {
   .opcoes-quizz,
   .quizzes-adicionados {
     grid-template-columns: 1fr;
-    gap: 15px;
+  }
+
+  .opcoes-quizz {
+    padding-bottom: 15px;
   }
 
   .quizzes-adicionados {
     margin-bottom: 38px;
+  }
+
+  .container-img {
+    height: 53vw;
   }
 
   .titulo-opcoes-quizz,
