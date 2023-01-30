@@ -1,4 +1,23 @@
+let levels = [];
+let perguntasRespondidas = [];
+let quantidadePerguntasQuizz = 0;
+let idQuizz;
+
 function carregarRespostas(data) {
+  levels = data.levels;
+  quantidadePerguntasQuizz = data.questions.length;
+  idQuizz = data.id;
+
+  const body = document.querySelector('body');
+
+  body.innerHTML = `
+    <header>
+      <h1>BuzzQuizz</h1>
+    </header>
+
+    <div class="container-conteudos"></div>
+  `;
+
   const respostasQuizz = document.querySelector('.container-conteudos');
   respostasQuizz.classList.add('novo-container');
   respostasQuizz.innerHTML = ` 
@@ -16,63 +35,114 @@ function carregarRespostas(data) {
       ${montaPerguntas(data.questions)}
     </div>
     `;
-    document.querySelectorAll('.respostas').forEach((resposta) => {
-      resposta.addEventListener('click', selecionaResposta);
-    });
+  document.querySelectorAll('.respostas').forEach(resposta => {
+    resposta.addEventListener('click', selecionaResposta);
+  });
 }
 
-let perguntas = [];
-
 function carregarPerguntas(id) {
+  levels = [];
+  perguntasRespondidas = [];
+  quantidadePerguntasQuizz = 0;
+  idQuizz = null;
+
+  criarLoader();
 
   axios
     .get(`https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes/${id}`)
     .then(resposta => {
       carregarRespostas(resposta.data);
-      window.scrollTo(0, 0);
+      window.scrollTo({ behavior: 'smooth' }, 0, 0);
     });
 }
 
-
 function montaPerguntas(perguntas) {
-  let perguntashtml = "";
+  let perguntashtml = '';
 
   perguntas.forEach((pergunta, index) => {
-    console.log(pergunta);
-    perguntashtml += 
-    `<div class="perguntas" id="${index}">
-      <p style="background:${pergunta.color}">${pergunta.title}</p>
+    perguntashtml += `<div class="perguntas" id="${index}">
+      <p style="background:${pergunta.color}" class="pergunta-titulo">${
+      pergunta.title
+    }</p>
       <div class="respostas-div">
         ${montaRespostas(pergunta.answers, index)}
       </div>
-    </div>`
-
+    </div>`;
   });
-   
-  return perguntashtml
+
+  return perguntashtml;
 }
 
-
 function montaRespostas(respostas, indicePergunta) {
-  let respostashtml = "";
+  let respostashtml = '';
   const respostasEmbaralhadas = embaralhaRespostas(respostas);
   respostasEmbaralhadas.forEach(resposta => {
-    respostashtml += 
-    `<div class="respostas" data-certo="${resposta.isCorrectAnswer}" data-pergunta="${indicePergunta}">
+    respostashtml += `<div class="respostas" data-certo="${resposta.isCorrectAnswer}" data-pergunta="${indicePergunta}">
       <img src="${resposta.image}" class="respostas-img">
       <p class="texto-resposta">${resposta.text}</p>
-    </div>`
+    </div>`;
   });
 
-  return respostashtml
+  return respostashtml;
+}
+
+function carregarResultado() {
+  const quantidadeCorretas = perguntasRespondidas.filter(
+    item => item === true
+  ).length;
+  const resultado = Math.round(
+    (quantidadeCorretas / quantidadePerguntasQuizz) * 100
+  );
+
+  const levelAtingido = levels
+    .filter(item => item.minValue <= resultado)
+    .at(-1);
+
+  const container = document.querySelector('.container-conteudos');
+
+  container.innerHTML += `
+    <div class="container-resultado">
+      <div class="resultado-titulo">
+        <h3>${resultado}% de acerto: ${levelAtingido.title}</h3>
+      </div>
+      <div class="resultado-descricao">
+        <img src="${levelAtingido.image}" alt="" />
+        <p>${levelAtingido.text} </p>
+      </div>
+    </div>
+
+    <div class="c-sucesso__container-button">
+      <button class="c-sucesso__button-acessar" onclick="carregarPerguntas(${idQuizz})">Reiniciar Quizz</button>
+    </div>
+    <div class="c-sucesso__container-button">
+      <button class="c-sucesso__button-voltar" onclick="carregarPaginaLista()">Voltar pra home</button>
+    </div>
+  `;
 }
 
 function selecionaResposta() {
-  console.log(this);
   this.dataset.clicado = true;
   carregaCoresRespostas(this.dataset.pergunta, this);
+
+  if (perguntasRespondidas.length === quantidadePerguntasQuizz) {
+    carregarResultado();
+  }
+
   setTimeout(() => {
-    document.getElementById(`${parseInt(this.dataset.pergunta) + 1}`).scrollIntoView(false);
+    const containerResultado = document.querySelector('.container-resultado');
+    if (containerResultado !== null) {
+      containerResultado.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    } else {
+      document
+        .getElementById(`${parseInt(this.dataset.pergunta) + 1}`)
+        .scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+    }
   }, 2000);
 }
 
@@ -86,20 +156,28 @@ function embaralhaRespostas(array) {
   return array;
 }
 
-function carregaCoresRespostas(indicePergunta, respostaClicada){
-  const respostasCores = document.querySelectorAll(`[data-pergunta="${indicePergunta}"]`);
-  console.log(respostaClicada);
-  
-  respostasCores.forEach((resposta) => {
-    console.log(resposta)
-    if(resposta.dataset.certo === "true"){
-      resposta.style.color= "#009C22";
+function carregaCoresRespostas(indicePergunta, respostaClicada) {
+  const respostasCores = document.querySelectorAll(
+    `[data-pergunta="${indicePergunta}"]`
+  );
+
+  respostasCores.forEach(resposta => {
+    if (resposta.dataset.certo === 'true') {
+      if (resposta.dataset.clicado) {
+        perguntasRespondidas.push(true);
+      }
+
+      resposta.style.color = '#009C22';
     } else {
-      resposta.style.color=  "#FF4B4B"
+      if (resposta.dataset.clicado) {
+        perguntasRespondidas.push(false);
+      }
+      resposta.style.color = '#FF4B4B';
     }
-    if(!resposta.dataset.clicado){
-      resposta.style.opacity= "0.3";
-    } 
+    if (!resposta.dataset.clicado) {
+      resposta.style.opacity = '0.3';
+    }
+
     resposta.removeEventListener('click', selecionaResposta);
   });
 }

@@ -38,6 +38,13 @@ h1 {
   color: #ffffff;
 }
 
+p,
+h1,
+h2,
+h3 {
+  word-break: break-word;
+}
+
 .container-loader {
   margin-top: calc(50vh);
 
@@ -325,7 +332,9 @@ h1 {
 .c-sucesso__container-img:hover,
 .container-img:hover .img-quizz,
 .titulo-adicionar-quizz ion-icon:hover,
-.criar-quizz button:hover {
+.criar-quizz button:hover,
+.respostas-img:hover,
+.novo-container button:hover {
   cursor: pointer;
   filter: brightness(0.9);
 }
@@ -448,8 +457,6 @@ h1 {
   width: 100%;
   height: 181px;
 
-  word-break: break-word;
-
   display: flex;
   position: relative;
 }
@@ -505,6 +512,158 @@ h1 {
 
 .esconder {
   display: none !important;
+}
+
+/* DISPLAY PERGUNTAS DO QUIZZ */
+.container-conteudos.novo-container {
+  width: 100%;
+  margin-top: 69px;
+  padding-bottom: 30px;
+}
+
+.background-quizz {
+  position: relative;
+  width: 100vw;
+}
+
+.background-image {
+  position: absolute;
+  width: 100vw;
+  height: 142px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.background-image > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.titulo-quizz {
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  height: 142px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+}
+
+.quizz-menu button:hover {
+  background-color: #ec372d8a;
+  cursor: pointer;
+  filter: brightness(0.9);
+}
+
+.container-perguntas {
+  margin-top: 200px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.perguntas {
+  width: 100%;
+
+  margin-bottom: 28px;
+  padding: 18px;
+
+  background: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+}
+
+.pergunta-titulo {
+  font-size: 19px;
+  font-weight: 700;
+  color: #ffffff;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  width: 100%;
+  padding: 16px;
+  /* min-height: 89px; */
+}
+
+.respostas > .respostas-img {
+  width: 100%;
+  height: 34vw;
+  max-height: 175px;
+
+  overflow: hidden;
+  /* width: 329.91px;
+  height: 175.2px; */
+  object-fit: cover;
+}
+
+.respostas-div {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 11px;
+  margin-top: 20.6px;
+  margin-bottom: 12px;
+}
+
+.respostas {
+  width: 100%;
+}
+
+.texto-resposta {
+  font-size: 13px;
+  line-height: 15px;
+  font-weight: 700;
+}
+
+.container-resultado {
+  width: 100%;
+  padding: 18px;
+
+  background: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+
+  margin-bottom: 34px;
+}
+
+.resultado-descricao {
+  margin-top: 9px;
+}
+
+.resultado-titulo {
+  min-height: 89px;
+  padding: 0 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ec362d;
+}
+
+.resultado-titulo h3 {
+  font-size: 19px;
+  line-height: 22px;
+  font-weight: 700;
+  text-align: center;
+
+  color: #fff;
+}
+
+.resultado-descricao img {
+  width: 100%;
+  height: auto;
+}
+
+.resultado-descricao p {
+  margin-top: 9px;
+
+  font-size: 17px;
+  line-height: 20px;
+  font-weight: 700;
 }
 
 @media (min-width: 1100px) {
@@ -573,6 +732,69 @@ h1 {
     font-size: 21px;
     line-height: 25px;
   }
+
+  /* TELA QUIZZ */
+  .container-conteudos.novo-container {
+    width: 759px;
+  }
+  .container-perguntas {
+    margin-top: 296px;
+  }
+
+  .background-image {
+    height: 227px;
+  }
+
+  .titulo-quizz {
+    height: 227px;
+  }
+
+  .titulo-quizz p {
+    font-size: 39px;
+    line-height: 46px;
+  }
+
+  .perguntas {
+    padding: 30px;
+    margin-bottom: 48px;
+  }
+
+  .pergunta-titulo {
+    font-size: 23px;
+    line-height: 27px;
+
+    padding: 30px;
+  }
+
+  .texto-resposta {
+    font-size: 20px;
+    line-height: 23px;
+
+    margin-top: 8px;
+  }
+
+  .respostas-div {
+    gap: 25px;
+  }
+
+  .resultado-descricao {
+    margin-top: 18px;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 21px;
+  }
+
+  .resultado-descricao img {
+    width: 100%;
+  }
+
+  .resultado-descricao p {
+    font-size: 17px;
+    line-height: 20px;
+
+    margin-top: 0;
+  }
 }
 
 @media (max-width: 1099px) {
@@ -611,124 +833,5 @@ h1 {
 
   .criar-quizz {
     margin-bottom: 35px;
-  }
-}
-
-/* DISPLAY PERGUNTAS DO QUIZZ */
-.container-conteudos.novo-container {
-  margin-top: 69px;
-  max-width: 700px;
-}
-
-.background-quizz {
-  position: relative;
-  width: 100vw;
-}
-
-.background-image {
-  position: absolute;
-  width: 100vw;
-  height: 142px;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-}
-
-.background-image > img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.titulo-quizz {
-  background-color: rgba(0, 0, 0, 0.6);
-  width: 100%;
-  max-height: 227px;
-  min-height: 142px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-}
-
-.quizz-menu button:hover {
-  background-color: #ec372d8a;
-  cursor: pointer;
-  filter: brightness(0.9);
-}
-
-.container-perguntas {
-  margin-top: 200px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.perguntas {
-  margin-bottom: 50px;
-}
-
-.perguntas > p{
-  font-family: 'Roboto', sans-serif;
-  font-size: 19px;
-  font-weight: 700;
-  color: #ffffff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  width: 100%;
-  height: 137.99px;
-}
-
-.respostas > .respostas-img {
-  width: 329.91px;
-  height: 175.2px;
-}
-
-.respostas-div {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 11px;
-  margin-top: 20.6px;
-  margin-bottom: 12px;
-}
-
-.respostas {
-  width: 329.91px;
-}
-
-.texto-resposta {
-  font-family: 'roboto', sans-serif;
-  font-size: 20px;
-  font-weight: 700;
-  word-break: break-all;
-}
-
-@media (max-width: 400px) {
-  .perguntas > p {
-    width: 100%;
-    height: 89px;
-  }
-  .respostas-div {
-    margin-top: 12px;
-    margin-bottom: 12px;
-  }
-  .respostas > .respostas-img {
-    width: 163px;
-    height: 113px;
-  }
-
-  .respostas {
-    width: 163px;
-  }
-
-  .texto-resposta {
-    font-family: 'roboto', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
   }
 }
