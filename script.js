@@ -3,12 +3,26 @@ let quantidadePerguntas = 0;
 let quantidadeNiveis = 0;
 let formularioInvalido = false;
 
-let novoQuizz;
+let novoQuizz, dataItemSelecionado, itemSelecionado;
 
 let listaMeusQuizzes = [];
 let listaQuizzes = [];
 
 const baseURL = 'https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes';
+
+const resetarVariaveis = () => {
+  etapa = 1;
+  quantidadePerguntas = 0;
+  quantidadeNiveis = 0;
+  formularioInvalido = false;
+
+  novoQuizz = null;
+  dataItemSelecionado = null;
+  itemSelecionado = null;
+
+  listaMeusQuizzes = [];
+  listaQuizzes = [];
+};
 
 const deletarQuizz = async (event, id) => {
   event.stopPropagation();
@@ -17,6 +31,7 @@ const deletarQuizz = async (event, id) => {
 
   if (confirm('Deseja realmente deletar este quizz?') === true) {
     try {
+      criarLoader();
       await axios.delete(`${baseURL}/${id}`, {
         headers: {
           'Secret-Key': quizz.key
@@ -34,35 +49,90 @@ const deletarQuizz = async (event, id) => {
   }
 };
 
+const editarQuizz = async (event, id) => {
+  event.stopPropagation();
+  itemSelecionado = listaMeusQuizzes.find(item => item.id === id);
+
+  try {
+    criarLoader();
+    const response = await axios.get(
+      `https://mock-api.driven.com.br/api/v4/buzzquizz/quizzes/${itemSelecionado.id}`
+    );
+
+    dataItemSelecionado = response.data;
+
+    carregarPaginaCriarQuizz();
+  } catch (error) {
+    alert(error.response.data.message);
+  }
+};
+
 const enviarQuizz = async () => {
   try {
     criarLoader();
-    const response = await axios.post(`${baseURL}`, novoQuizz);
 
-    const titulo = response.data.title;
-    const imagemURL = response.data.image;
-    const id = response.data.id;
-    const key = response.data.key;
+    if (dataItemSelecionado) {
+      const response = await axios.put(
+        `${baseURL}/${itemSelecionado.id}`,
+        novoQuizz,
+        {
+          headers: {
+            'Secret-Key': itemSelecionado.key
+          }
+        }
+      );
 
-    let quizzesArr = [];
+      const titulo = response.data.title;
+      const imagemURL = response.data.image;
+      const id = response.data.id;
+      const key = response.data.key;
 
-    if (localStorage.getItem('meusQuizzes')) {
-      const meusQuizzesSerializados = localStorage.getItem('meusQuizzes');
-      quizzesArr = JSON.parse(meusQuizzesSerializados);
+      const meuNovoQuizz = {
+        id,
+        titulo,
+        imagemURL,
+        key
+      };
+
+      const listaNova = listaMeusQuizzes.filter(
+        item => item.id !== itemSelecionado.id
+      );
+
+      listaNova.push(meuNovoQuizz);
+      const quizzesSerializados = JSON.stringify(listaNova);
+      localStorage.setItem('meusQuizzes', quizzesSerializados);
+
+      carregarTelaSucesso(titulo, imagemURL, id);
+    } else {
+      const response = await axios.post(`${baseURL}`, novoQuizz);
+
+      const titulo = response.data.title;
+      const imagemURL = response.data.image;
+      const id = response.data.id;
+      const key = response.data.key;
+
+      let quizzesArr = [];
+
+      if (localStorage.getItem('meusQuizzes')) {
+        const meusQuizzesSerializados = localStorage.getItem('meusQuizzes');
+        quizzesArr = JSON.parse(meusQuizzesSerializados);
+      }
+
+      const meuNovoQuizz = {
+        id,
+        titulo,
+        imagemURL,
+        key
+      };
+
+      quizzesArr.push(meuNovoQuizz);
+      const quizzesSerializados = JSON.stringify(quizzesArr);
+      localStorage.setItem('meusQuizzes', quizzesSerializados);
+
+      carregarTelaSucesso(titulo, imagemURL, id);
     }
 
-    const meuNovoQuizz = {
-      id,
-      titulo,
-      imagemURL,
-      key
-    };
-
-    quizzesArr.push(meuNovoQuizz);
-    const quizzesSerializados = JSON.stringify(quizzesArr);
-    localStorage.setItem('meusQuizzes', quizzesSerializados);
-
-    carregarTelaSucesso(titulo, imagemURL, id);
+    resetarVariaveis();
   } catch (error) {
     alert('Houve um erro ao enviar o quizz. Por favor, tente novamente');
     carregarPaginaCriarQuizz();
@@ -168,8 +238,7 @@ const esconderBlocos = itemIdx => {
 const carregarQuizzes = async () => {
   try {
     criarLoader();
-
-    listaQuizzes = [];
+    resetarVariaveis();
 
     const response = await axios.get(baseURL);
 
@@ -207,11 +276,13 @@ const carregarEtapaDois = () => {
             type="text"
             placeholder="Texto da pergunta"
             id="c-pergunta-${i + 1}__input--texto"
+            value="${dataItemSelecionado?.questions[i].title || ''}"
           />
           <input
             type="text"
             placeholder="Cor de fundo da pergunta"
             id="c-pergunta-${i + 1}__input--cor-fundo"
+            value="${dataItemSelecionado?.questions[i].color || ''}"
           />
         </div>
 
@@ -221,11 +292,13 @@ const carregarEtapaDois = () => {
             type="text"
             placeholder="Resposta correta"
             id="c-pergunta-${i + 1}__input--resposta-correta"
+            value="${dataItemSelecionado?.questions[i].answers[0].text || ''}"
           />
           <input
             type="url"
             placeholder="URL da imagem"
             id="c-pergunta-${i + 1}__input--url-resposta-correta"
+            value="${dataItemSelecionado?.questions[i].answers[0].image || ''}"
           />
         </div>
 
@@ -235,11 +308,13 @@ const carregarEtapaDois = () => {
             type="text"
             placeholder="Resposta incorreta 1"
             id="c-pergunta-${i + 1}__input--resposta-incorreta-1"
+            value="${dataItemSelecionado?.questions[i].answers[1].text || ''}"
           />
           <input
             type="url"
             placeholder="URL da imagem 1"
             id="c-pergunta-${i + 1}__input--url-resposta-incorreta-1"
+            value="${dataItemSelecionado?.questions[i].answers[1].image || ''}"
           />
         </div>
 
@@ -248,11 +323,13 @@ const carregarEtapaDois = () => {
             type="text"
             placeholder="Resposta incorreta 2"
             id="c-pergunta-${i + 1}__input--resposta-incorreta-2"
+            value="${dataItemSelecionado?.questions[i].answers[2]?.text || ''}"
           />
           <input
             type="url"
             placeholder="URL da imagem 2"
             id="c-pergunta-${i + 1}__input--url-resposta-incorreta-2"
+            value="${dataItemSelecionado?.questions[i].answers[2]?.image || ''}"
           />
         </div>
 
@@ -261,11 +338,13 @@ const carregarEtapaDois = () => {
             type="text"
             placeholder="Resposta incorreta 3"
             id="c-pergunta-${i + 1}__input--resposta-incorreta-3"
+            value="${dataItemSelecionado?.questions[i].answers[3]?.text || ''}"
           />
           <input
             type="url"
             placeholder="URL da imagem 3"
             id="c-pergunta-${i + 1}__input--url-resposta-incorreta-3"
+            value="${dataItemSelecionado?.questions[i].answers[3]?.image || ''}"
           />
         </div>
       </div>
@@ -304,6 +383,7 @@ const carregarEtapaTres = () => {
             type="text"
             placeholder="Título do nível"
             id="c-nivel-${i + 1}__input--titulo"
+            value="${dataItemSelecionado?.levels[i].title || ''}"
           />
           <input
             type="number"
@@ -311,16 +391,22 @@ const carregarEtapaTres = () => {
             max="100"
             placeholder="% de acerto mínima"
             id="c-nivel-${i + 1}__input--porcentagem-acerto"
+            value="${
+              dataItemSelecionado?.levels[i].minValue >= 0
+                ? dataItemSelecionado?.levels[i].minValue
+                : ''
+            }"
           />
           <input
             type="url"
             placeholder="URL da imagem do nível"
             id="c-nivel-${i + 1}__input--url"
+            value="${dataItemSelecionado?.levels[i].image || ''}"
           />
           <textarea
             placeholder="Descrição do nível"
             id="c-nivel-${i + 1}__textarea"
-          ></textarea>
+          >${dataItemSelecionado?.levels[i].text || ''}</textarea>
         </div>
       </div>
     `;
@@ -422,7 +508,7 @@ const carregarPaginaLista = async () => {
           />
           <p>${item.titulo}</p>
           <div class="quizz-menu">
-            <button class="quizz-editar" onclick="editar(event, ${item.id})">
+            <button class="quizz-editar" onclick="editarQuizz(event, ${item.id})">
               <img src="assets/edit.svg" />
             </button>
             <button class="quizz-deletar" onclick="deletarQuizz(event, ${item.id})">
@@ -467,24 +553,28 @@ const carregarPaginaCriarQuizz = () => {
               type="text"
               placeholder="Título do seu quizz"
               id="c-informacoes-gerais__input--titulo"
+              value="${dataItemSelecionado?.title || ''}"
             />
             <input
               type="url"
               placeholder="URL da imagem do seu quizz"
               id="c-informacoes-gerais__input--url"
-            />
+              value="${dataItemSelecionado?.image || ''}"
+            >
             <input
               type="number"
               min="3"
               placeholder="Quantidade de perguntas do quizz"
               id="c-informacoes-gerais__input--quantidade-perguntas"
-            />
+              value="${dataItemSelecionado?.questions.length || ''}"
+            >
             <input
               type="number"
               min="2"
               placeholder="Quantidade de níveis do quizz"
               id="c-informacoes-gerais__input--quantidade-niveis"
-            />
+              value="${dataItemSelecionado?.levels.length || ''}"
+            >
           </div>
 
           <div class="c-main__formulario-button">

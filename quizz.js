@@ -77,7 +77,7 @@ function montaRespostas(respostas, indicePergunta) {
   let respostashtml = '';
   const respostasEmbaralhadas = embaralhaRespostas(respostas);
   respostasEmbaralhadas.forEach(resposta => {
-    respostashtml += `<div class="respostas" data-certo="${resposta.isCorrectAnswer}" data-pergunta="${indicePergunta}">
+    respostashtml += `<div class="respostas hover-effect" data-certo="${resposta.isCorrectAnswer}" data-pergunta="${indicePergunta}">
       <img src="${resposta.image}" class="respostas-img">
       <p class="texto-resposta">${resposta.text}</p>
     </div>`;
@@ -122,7 +122,7 @@ function carregarResultado() {
 
 function selecionaResposta() {
   this.dataset.clicado = true;
-  carregaCoresRespostas(this.dataset.pergunta, this);
+  carregaCoresRespostas(this.dataset.pergunta);
 
   if (perguntasRespondidas.length === quantidadePerguntasQuizz) {
     carregarResultado();
@@ -156,7 +156,7 @@ function embaralhaRespostas(array) {
   return array;
 }
 
-function carregaCoresRespostas(indicePergunta, respostaClicada) {
+function carregaCoresRespostas(indicePergunta) {
   const respostasCores = document.querySelectorAll(
     `[data-pergunta="${indicePergunta}"]`
   );
@@ -166,7 +166,6 @@ function carregaCoresRespostas(indicePergunta, respostaClicada) {
       if (resposta.dataset.clicado) {
         perguntasRespondidas.push(true);
       }
-
       resposta.style.color = '#009C22';
     } else {
       if (resposta.dataset.clicado) {
@@ -174,10 +173,12 @@ function carregaCoresRespostas(indicePergunta, respostaClicada) {
       }
       resposta.style.color = '#FF4B4B';
     }
+
+    resposta.classList.remove('hover-effect');
+
     if (!resposta.dataset.clicado) {
       resposta.style.opacity = '0.3';
     }
-
     resposta.removeEventListener('click', selecionaResposta);
   });
 }

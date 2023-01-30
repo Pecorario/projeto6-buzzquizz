@@ -333,7 +333,7 @@ h3 {
 .container-img:hover .img-quizz,
 .titulo-adicionar-quizz ion-icon:hover,
 .criar-quizz button:hover,
-.respostas-img:hover,
+.hover-effect:hover img,
 .novo-container button:hover {
   cursor: pointer;
   filter: brightness(0.9);
