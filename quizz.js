@@ -37,8 +37,10 @@ function montaPerguntas(perguntas) {
     console.log(pergunta);
     perguntashtml += 
     `<div class="perguntas">
-      <p>${pergunta.title}</p>
-      ${montaRespostas(pergunta.answers)}
+      <p style="background:${pergunta.color}">${pergunta.title}</p>
+      <div class="respostas-div">
+        ${montaRespostas(pergunta.answers)}
+      </div>
     </div>`
 
   });
@@ -51,11 +53,15 @@ function montaRespostas(respostas) {
 
   respostas.forEach(resposta => {
     respostashtml += 
-    `<div class="respostas">
+    `<div class="respostas" data-certo="${resposta.isCorrectAnswer}" onclick="selecionaResposta(this)">
       <img src="${resposta.image}" class="respostas-img">
       <p class="texto-resposta">${resposta.text}</p>
     </div>`
   });
 
   return respostashtml
+}
+
+function selecionaResposta(selecionado) {
+
 }
